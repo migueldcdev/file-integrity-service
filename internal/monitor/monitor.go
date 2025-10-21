@@ -10,7 +10,7 @@ func WatchDirectory(path string) {
 	w, err := fsnotify.NewWatcher()
 
 	if err != nil {
-		fmt.Printf("an error ocurred while creating a new watcher %s", err)
+		fmt.Printf("An error ocurred while creating a new watcher %s", err)
 		os.Exit(1)
 	}
 
