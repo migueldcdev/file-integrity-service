@@ -1,11 +1,13 @@
 package main
 
 import (
+	"flag"
 	"github.com/migueldcdev/file-integrity-service/internal/monitor"
 )
 
 func main() {
-	path := "/home/miguel/Dev/go/file-integrity-service/watchdir"
-	monitor.WatchDirectory(path)
+	path := flag.String("path", "", "dir path to watch")
+	flag.Parse()
+	monitor.WatchDirectory(*path)
 
 }

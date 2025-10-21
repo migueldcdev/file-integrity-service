@@ -19,7 +19,7 @@ func WatchDirectory(path string) {
 	go watchLoop(w)
 
 	defer w.Close()
-
+	fmt.Println("Service is running, press <Ctrl+c> to exit")
 	<-make(chan struct{})
 }
 
@@ -32,15 +32,14 @@ func watchLoop(w *fsnotify.Watcher) {
 			if !ok {
 				return
 			}
-			fmt.Printf("ERROR: %s", err)
+			fmt.Printf("ERROR: %s\n", err)
 
 		case e, ok := <-w.Events:
 			if !ok {
 				return
 			}
-
 			i++
-			fmt.Printf("%3d %s", i, e)
+			fmt.Printf("%3d %s\n", i, e)
 		}
 	}
 }
