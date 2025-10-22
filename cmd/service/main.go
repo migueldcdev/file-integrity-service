@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/migueldcdev/file-integrity-service/internal/db"
+	"github.com/migueldcdev/file-integrity-service/internal/hash"
 	"github.com/migueldcdev/file-integrity-service/internal/monitor"
 	"os"
 )
@@ -22,6 +23,8 @@ func main() {
 	}
 	path := flag.String("path", "", "dir path to watch")
 	flag.Parse()
+
+	hash.WalkDirAndHashFiles(*path)
 	monitor.WatchDirectory(*path)
 
 }
