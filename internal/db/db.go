@@ -20,12 +20,12 @@ func ConnectToDB(path string) error {
 func InitDB() error {
 	var err error
 	createTable := `
-        CREATE TABLE IF NOT EXISTS files (
+        CREATE TABLE IF NOT EXISTS hash (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             path TEXT UNIQUE NOT NULL,
             hash TEXT NOT NULL,
             size INTEGER NOT NULL,
-            mod_time DATETIME NOT NULL,
+            created_at DATETIME NOT NULL,
             last_checked DATETIME NOT NULL
         )
        `
