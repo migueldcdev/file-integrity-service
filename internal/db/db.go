@@ -20,7 +20,8 @@ func ConnectToDB(path string) error {
 func InitDB() error {
 	var err error
 	createTable := `
-        CREATE TABLE IF NOT EXISTS hash (
+	DROP TABLE IF EXISTS hash;
+        CREATE TABLE hash (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             path TEXT UNIQUE NOT NULL,
             hash TEXT NOT NULL,
