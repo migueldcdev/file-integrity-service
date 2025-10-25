@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 func WatchDirectory(path string) {
@@ -31,7 +32,7 @@ func WatchDirectory(path string) {
 			if !ok {
 				return
 			}
-			fmt.Printf("EVENT: %s %s\n", event.Op, event.Name)
+			fmt.Printf("%s - EVENT: %s %s\n", time.Now(), event.Op, event.Name)
 
 		case err, ok := <-w.Errors:
 			if !ok {
