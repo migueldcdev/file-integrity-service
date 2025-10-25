@@ -49,8 +49,6 @@ func WalkDirAndHashFiles(dirPath string) error {
 			return err
 		}
 
-		fmt.Printf("File %s hashed", path)
-
 		return nil
 	})
 }
