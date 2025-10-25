@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/migueldcdev/file-integrity-service/internal/api"
 	"github.com/migueldcdev/file-integrity-service/internal/db"
 	"github.com/migueldcdev/file-integrity-service/internal/monitor"
 	"github.com/migueldcdev/file-integrity-service/internal/service"
@@ -24,6 +25,7 @@ func main() {
 	path := flag.String("path", "", "dir path to watch")
 	flag.Parse()
 
+	go api.RunAPIServer()
 	service.WalkDirAndHashFiles(*path)
 
 	monitor.WatchDirectory(*path)
