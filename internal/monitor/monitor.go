@@ -3,7 +3,9 @@ package monitor
 import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
+	"io/fs"
 	"os"
+	"path/filepath"
 )
 
 func WatchDirectory(path string) {
@@ -14,32 +16,44 @@ func WatchDirectory(path string) {
 		os.Exit(1)
 	}
 
-	w.Add(path)
-
-	go watchLoop(w)
+	if err = addRecursive(w, path); err != nil {
+		fmt.Printf("Error adding path to watcher: %v", err)
+		os.Exit(1)
+	}
 
 	defer w.Close()
-	fmt.Println("Service is running, press <Ctrl+c> to exit")
-	<-make(chan struct{})
-}
 
-func watchLoop(w *fsnotify.Watcher) {
-	i := 0
+	fmt.Println("Service is running, press <Ctrl+c> to exit")
+
 	for {
 		select {
+		case event, ok := <-w.Events:
+			if !ok {
+				return
+			}
+			fmt.Printf("EVENT: %s %s\n", event.Op, event.Name)
 
 		case err, ok := <-w.Errors:
 			if !ok {
 				return
 			}
-			fmt.Printf("ERROR: %s\n", err)
-
-		case e, ok := <-w.Events:
-			if !ok {
-				return
-			}
-			i++
-			fmt.Printf("%3d %s\n", i, e)
+			fmt.Printf("ERROR: %v\n", err)
 		}
 	}
+}
+
+func addRecursive(w *fsnotify.Watcher, path string) error {
+	return filepath.WalkDir(path, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			if err := w.Add(path); err != nil {
+				fmt.Printf("Error adding path %s: %v\n", path, err)
+			} else {
+				fmt.Printf("Watching: %s\n", path)
+			}
+		}
+		return nil
+	})
 }
