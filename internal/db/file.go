@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -44,19 +45,42 @@ func GetAllHashedFiles() ([]HashedFile, error) {
 		}
 
 		hashedFiles = append(hashedFiles, hf)
-
 	}
 
 	return hashedFiles, nil
 }
 
-func UpdateFileHash(hfId int, hash string) error {
+func UpdateFileHash(path string, hash string) error {
 	var err error
-	_, err = DB.Exec("UPDATE hash SET hash=$1, created_at=$2 WHERE id=$3", hash, hfId, time.Now())
+	_, err = DB.Exec("UPDATE hash SET hash=$1, created_at=$2 WHERE path=$3", hash, time.Now(), path)
 
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func GetFileHashByPath(hfPath string) (string, error) {
+	var err error
+	var hash string
+	rows, err := DB.Query("SELECT hash FROM hash WHERE path=$1", hfPath)
+
+	if err != nil {
+		return "", err
+	}
+
+	defer rows.Close()
+
+	if rows.Next() {
+		err := rows.Scan(&hash)
+
+		if err != nil {
+			return "", err
+		}
+
+		return hash, nil
+	}
+
+	return "", fmt.Errorf("no hash found for path: %s", hfPath)
 }
