@@ -1,4 +1,4 @@
-# File Integrity Monitor
+# File Integrity Service
 
 A Go-based file monitoring and integrity verification project.  
 Tracks file changes in specified directories, computes file hashes, stores them in SQLite, and exposes a REST API for querying and updating file integrity.
